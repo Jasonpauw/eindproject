@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -17,7 +18,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    private string $username;
+    private ?string $username = null;
 
     #[ORM\Column]
     private array $roles = [];
@@ -26,31 +27,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
-    private string $password;
+    private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
-    private string $name;
+    #[ORM\OneToMany(mappedBy: 'creator', targetEntity: Game::class)]
+    private Collection $games;
 
-    #[ORM\Column(length: 255)]
-    private string $email;
+    #[ORM\ManyToMany(targetEntity: Achievement::class, mappedBy: 'user')]
+    private Collection $game;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $profilepic = null;
+    #[ORM\ManyToMany(targetEntity: Achievement::class, mappedBy: 'user')]
+    private Collection $achievements;
 
-    #[ORM\Column]
-    private bool $muted;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Score::class)]
+    private Collection $scores;
 
-    #[ORM\Column]
-    private bool $blocked;
-
-    #[ORM\Column]
-    private bool $admin;
-
-    #[ORM\Column]
-    private bool $friendrequest;
-
-    #[ORM\Column]
-    private ?int $gameid = null;
+    public function __construct()
+    {
+        $this->games = new ArrayCollection();
+        $this->game = new ArrayCollection();
+        $this->achievements = new ArrayCollection();
+        $this->scores = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -122,98 +119,97 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getName(): ?string
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getGames(): Collection
     {
-        return $this->name;
+        return $this->games;
     }
 
-    public function setName(string $name): static
+    public function addGame(Game $game): static
     {
-        $this->name = $name;
+        if (!$this->games->contains($game)) {
+            $this->games->add($game);
+            $game->setCreator($this);
+        }
 
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function removeGame(Game $game): static
     {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
+        if ($this->games->removeElement($game)) {
+            // set the owning side to null (unless already changed)
+            if ($game->getCreator() === $this) {
+                $game->setCreator(null);
+            }
+        }
 
         return $this;
     }
 
-    public function getProfilepic(): ?string
+    /**
+     * @return Collection<int, Achievement>
+     */
+    public function getGame(): Collection
     {
-        return $this->profilepic;
+        return $this->game;
     }
 
-    public function setProfilepic(?string $profilepic): static
+    /**
+     * @return Collection<int, Achievement>
+     */
+    public function getAchievements(): Collection
     {
-        $this->profilepic = $profilepic;
+        return $this->achievements;
+    }
+
+    public function addAchievement(Achievement $achievement): static
+    {
+        if (!$this->achievements->contains($achievement)) {
+            $this->achievements->add($achievement);
+            $achievement->addUser($this);
+        }
 
         return $this;
     }
 
-    public function isMuted(): ?bool
+    public function removeAchievement(Achievement $achievement): static
     {
-        return $this->muted;
-    }
-
-    public function setMuted(bool $muted): static
-    {
-        $this->muted = $muted;
+        if ($this->achievements->removeElement($achievement)) {
+            $achievement->removeUser($this);
+        }
 
         return $this;
     }
 
-    public function isBlocked(): ?bool
+    /**
+     * @return Collection<int, Score>
+     */
+    public function getScores(): Collection
     {
-        return $this->blocked;
+        return $this->scores;
     }
 
-    public function setBlocked(bool $blocked): static
+    public function addScore(Score $score): static
     {
-        $this->blocked = $blocked;
+        if (!$this->scores->contains($score)) {
+            $this->scores->add($score);
+            $score->setUser($this);
+        }
 
         return $this;
     }
 
-    public function isAdmin(): ?bool
+    public function removeScore(Score $score): static
     {
-        return $this->admin;
-    }
-
-    public function setAdmin(bool $admin): static
-    {
-        $this->admin = $admin;
-
-        return $this;
-    }
-
-    public function isFriendrequest(): ?bool
-    {
-        return $this->friendrequest;
-    }
-
-    public function setFriendrequest(bool $friendrequest): static
-    {
-        $this->friendrequest = $friendrequest;
-
-        return $this;
-    }
-
-    public function getGameid(): ?int
-    {
-        return $this->gameid;
-    }
-
-    public function setGameid(int $gameid): static
-    {
-        $this->gameid = $gameid;
+        if ($this->scores->removeElement($score)) {
+            // set the owning side to null (unless already changed)
+            if ($score->getUser() === $this) {
+                $score->setUser(null);
+            }
+        }
 
         return $this;
     }
