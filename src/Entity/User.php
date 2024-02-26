@@ -6,10 +6,13 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: '`user`')]
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -29,24 +32,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'creator', targetEntity: Game::class)]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $email = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $picture = null;
+
+    #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $games;
-
-    #[ORM\ManyToMany(targetEntity: Achievement::class, mappedBy: 'user')]
-    private Collection $game;
-
-    #[ORM\ManyToMany(targetEntity: Achievement::class, mappedBy: 'user')]
-    private Collection $achievements;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Score::class)]
-    private Collection $scores;
 
     public function __construct()
     {
         $this->games = new ArrayCollection();
-        $this->game = new ArrayCollection();
-        $this->achievements = new ArrayCollection();
-        $this->scores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -119,6 +116,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): static
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Game>
      */
@@ -131,7 +152,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->games->contains($game)) {
             $this->games->add($game);
-            $game->setCreator($this);
+            $game->setUser($this);
         }
 
         return $this;
@@ -141,73 +162,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->games->removeElement($game)) {
             // set the owning side to null (unless already changed)
-            if ($game->getCreator() === $this) {
-                $game->setCreator(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Achievement>
-     */
-    public function getGame(): Collection
-    {
-        return $this->game;
-    }
-
-    /**
-     * @return Collection<int, Achievement>
-     */
-    public function getAchievements(): Collection
-    {
-        return $this->achievements;
-    }
-
-    public function addAchievement(Achievement $achievement): static
-    {
-        if (!$this->achievements->contains($achievement)) {
-            $this->achievements->add($achievement);
-            $achievement->addUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAchievement(Achievement $achievement): static
-    {
-        if ($this->achievements->removeElement($achievement)) {
-            $achievement->removeUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Score>
-     */
-    public function getScores(): Collection
-    {
-        return $this->scores;
-    }
-
-    public function addScore(Score $score): static
-    {
-        if (!$this->scores->contains($score)) {
-            $this->scores->add($score);
-            $score->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScore(Score $score): static
-    {
-        if ($this->scores->removeElement($score)) {
-            // set the owning side to null (unless already changed)
-            if ($score->getUser() === $this) {
-                $score->setUser(null);
+            if ($game->getUser() === $this) {
+                $game->setUser(null);
             }
         }
 

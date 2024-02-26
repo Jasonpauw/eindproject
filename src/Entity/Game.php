@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\GameRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
@@ -18,27 +16,12 @@ class Game
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'games')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $creator = null;
-
     #[ORM\Column(length: 255)]
-    private ?string $description = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
 
-    #[ORM\OneToMany(mappedBy: 'game', targetEntity: Achievement::class)]
-    private Collection $achievements;
-
-    #[ORM\OneToMany(mappedBy: 'game', targetEntity: Score::class)]
-    private Collection $scores;
-
-    public function __construct()
-    {
-        $this->achievements = new ArrayCollection();
-        $this->scores = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(inversedBy: 'games')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -57,98 +40,26 @@ class Game
         return $this;
     }
 
-    public function getCreator(): ?User
-    {
-        return $this->creator;
-    }
-
-    public function setCreator(?User $creator): static
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): static
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
     public function getPicture(): ?string
     {
         return $this->picture;
     }
 
-    public function setPicture(?string $picture): static
+    public function setPicture(string $picture): static
     {
         $this->picture = $picture;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Achievement>
-     */
-    public function getAchievements(): Collection
+    public function getUser(): ?User
     {
-        return $this->achievements;
+        return $this->user;
     }
 
-    public function addAchievement(Achievement $achievement): static
+    public function setUser(?User $user): static
     {
-        if (!$this->achievements->contains($achievement)) {
-            $this->achievements->add($achievement);
-            $achievement->setGame($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAchievement(Achievement $achievement): static
-    {
-        if ($this->achievements->removeElement($achievement)) {
-            // set the owning side to null (unless already changed)
-            if ($achievement->getGame() === $this) {
-                $achievement->setGame(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Score>
-     */
-    public function getScores(): Collection
-    {
-        return $this->scores;
-    }
-
-    public function addScore(Score $score): static
-    {
-        if (!$this->scores->contains($score)) {
-            $this->scores->add($score);
-            $score->setGame($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScore(Score $score): static
-    {
-        if ($this->scores->removeElement($score)) {
-            // set the owning side to null (unless already changed)
-            if ($score->getGame() === $this) {
-                $score->setGame(null);
-            }
-        }
+        $this->user = $user;
 
         return $this;
     }
