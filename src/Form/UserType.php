@@ -2,21 +2,20 @@
 
 namespace App\Form;
 
-use App\Entity\Game;
 use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
-class GameType extends AbstractType
+
+class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('link')
+            ->add('username')
+            ->add('gender')
             ->add('picture', FileType::class, ['constraints' => [
                 new File([
                     'maxSize' => '10240000k',
@@ -24,7 +23,7 @@ class GameType extends AbstractType
                         'image/jpeg',
                         'image/jpg',
                     ],
-                    'mimeTypesMessage' => 'Please upload a valid PDF document',
+                    'mimeTypesMessage' => 'Please upload a valid jpg/jpeg document',
                 ])
             ],]);
         ;
@@ -33,7 +32,7 @@ class GameType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Game::class,
+            'data_class' => User::class,
         ]);
     }
 }

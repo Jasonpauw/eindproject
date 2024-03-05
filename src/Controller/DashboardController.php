@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\GameRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -9,12 +10,11 @@ use Symfony\Component\Routing\Attribute\Route;
 class DashboardController extends AbstractController
 {
     #[Route('/', name: 'app_dashboard')]
-    public function index(): Response
+    public function index(GameRepository $gameRepository): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
+        $games = $gameRepository->findAll();
         return $this->render('dashboard/index.html.twig', [
-            'controller_name' => 'DashboardController',
+            'games' => $games
         ]);
     }
 }

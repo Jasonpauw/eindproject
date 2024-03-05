@@ -6,6 +6,7 @@ use App\Entity\Game;
 use App\Form\GameType;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use http\Client\Curl\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +19,7 @@ class GameController extends AbstractController
     #[Route('/', name: 'app_game_index', methods: ['GET'])]
     public function index(GameRepository $gameRepository): Response
     {
-        return $this->render('game/index.html.twig', [
+        return $this->redirectToRoute('app_dashboard', [
             'games' => $gameRepository->findAll(),
         ]);
     }
@@ -39,7 +40,8 @@ class GameController extends AbstractController
                 $path
             );
             $game->setPicture($path);
-
+            $random = base64_encode($game->getName() . $game->getPicture());
+            $game->setApikey($random);
             $game->setUser($this->getUser());
             $entityManager->persist($game);
             $entityManager->flush();
@@ -56,7 +58,7 @@ class GameController extends AbstractController
     #[Route('/{id}', name: 'app_game_show', methods: ['GET'])]
     public function show(Game $game): Response
     {
-        return $this->render('game/show.html.twig', [
+        return $this->redirectToRoute('app_dashboard', [
             'game' => $game,
         ]);
     }

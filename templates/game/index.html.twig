@@ -15,6 +15,7 @@
             </tr>
         </thead>
         <tbody>
+        {% if app.user %}
         {% for game in games %}
             <tr>
                 <td>{{ game.id }}</td>
@@ -22,7 +23,6 @@
                 <td>{{ game.picture }}</td>
                 <td>
                     <a href="{{ path('app_game_show', {'id': game.id}) }}">show</a>
-                    <a href="{{ path('app_game_edit', {'id': game.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

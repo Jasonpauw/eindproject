@@ -41,9 +41,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $games;
 
+    #[ORM\Column(length: 255)]
+    private ?string $gender = null;
+
+    #[ORM\ManyToMany(targetEntity: Achievement::class, mappedBy: 'user')]
+    private Collection $achievements;
+
     public function __construct()
     {
         $this->games = new ArrayCollection();
+        $this->achievements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -165,6 +172,45 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($game->getUser() === $this) {
                 $game->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getGender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(string $gender): static
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Achievement>
+     */
+    public function getAchievements(): Collection
+    {
+        return $this->achievements;
+    }
+
+    public function addAchievement(Achievement $achievement): static
+    {
+        if (!$this->achievements->contains($achievement)) {
+            $this->achievements->add($achievement);
+            $achievement->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAchievement(Achievement $achievement): static
+    {
+        if ($this->achievements->removeElement($achievement)) {
+            $achievement->removeUser($this);
         }
 
         return $this;
