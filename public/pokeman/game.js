@@ -95,7 +95,6 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
         if(guessedAlready !== undefined) {
             return;
         }
-        guessedPokemon.push(isValueAMon);
         currentscore += 1;
         if(INPUT.value === 'pikachu'.toLowerCase() && guessedAlready !== undefined) {
             const response = await fetch('https://64903.cvoatweb.be/api/achievement', {
@@ -140,6 +139,7 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
                     picture: 'https://en.pokemart.be/wp-content/uploads/2022/06/pokedex.png'})
             });
         }
+        guessedPokemon.push(isValueAMon);
         INPUT.value = '';
         const td = document.createElement('td');
         td.innerText = isValueAMon;
