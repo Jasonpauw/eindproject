@@ -10,7 +10,7 @@
     <p>hello</p>
     {% if app.user %}
         {% for game in games%}
-            <li><a href="{{ game.link }}?userId={{ app.user.id }}?hash={{ game.hash(app.user) }}"><img src="images/{{ game.picture }}"></a></li>
+            <li><a href="{{ game.link }}?userId={{ app.user.id }}&hash={{ game.hash(app.user) }}"><img src="images/{{ game.picture }}"></a></li>
         {% endfor %}
         {% else %}
             {% for game in games%}

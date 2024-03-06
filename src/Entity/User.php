@@ -41,16 +41,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $games;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $gender = null;
 
     #[ORM\ManyToMany(targetEntity: Achievement::class, mappedBy: 'user')]
     private Collection $achievements;
 
+    #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'user')]
+    private Collection $scores;
+
     public function __construct()
     {
         $this->games = new ArrayCollection();
         $this->achievements = new ArrayCollection();
+        $this->scores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -211,6 +215,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->achievements->removeElement($achievement)) {
             $achievement->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Score>
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function addScore(Score $score): static
+    {
+        if (!$this->scores->contains($score)) {
+            $this->scores->add($score);
+            $score->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): static
+    {
+        if ($this->scores->removeElement($score)) {
+            // set the owning side to null (unless already changed)
+            if ($score->getUser() === $this) {
+                $score->setUser(null);
+            }
         }
 
         return $this;
