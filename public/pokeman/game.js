@@ -96,7 +96,7 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
             return;
         }
         currentscore += 1;
-        if(INPUT.value === 'pikachu'.toLowerCase() && guessedAlready !== undefined) {
+        if(INPUT.value === 'pikachu' && guessedAlready !== undefined) {
             const response = await fetch('https://64903.cvoatweb.be/api/achievement', {
                 method: 'POST',
                 headers: {
@@ -110,7 +110,7 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
                     picture: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png'})
             });
         }
-        if(INPUT.value === 'charizard'.toLowerCase() && guessedAlready !== undefined) {
+        if(INPUT.value === 'charizard' && guessedAlready !== undefined) {
             const response = await fetch('https://64903.cvoatweb.be/api/achievement', {
                 method: 'POST',
                 headers: {
