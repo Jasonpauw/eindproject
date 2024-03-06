@@ -63,7 +63,7 @@ async function postScore(){
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({link: "/games/pokeman/index.html",
+        body: JSON.stringify({link: "games/pokeman/index.html",
             userid: userid,
             hash: hash,
             points: currentscore,
@@ -103,7 +103,7 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({link: "/games/pokeman/index.html",
+                body: JSON.stringify({link: "games/pokeman/index.html",
                     userid: userid,
                     hash: hash,
                     title: 'mascot!!',
@@ -117,7 +117,7 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({link: "/games/pokeman/index.html",
+                body: JSON.stringify({link: "games/pokeman/index.html",
                     userid: userid,
                     hash: hash,
                     title: 'best pokemon',
@@ -132,7 +132,7 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({link: "/games/pokeman/index.html",
+                body: JSON.stringify({link: "games/pokeman/index.html",
                     userid: userid,
                     hash: hash,
                     title: 'max points',
