@@ -1,0 +1,103 @@
+{
+	"info": {
+		"_postman_id": "9502598a-a286-48f6-85ff-746610d7c8aa",
+		"name": "game api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30696158"
+	},
+	"item": [
+		{
+			"name": "playerInfo",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userid\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://64903.cvoatweb.be/api/user",
+					"protocol": "https",
+					"host": [
+						"64903",
+						"cvoatweb",
+						"be"
+					],
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "achievement",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"link\": \"games/pokeman/index.html\",\r\n    \"userid\": 1,\r\n    \"title\": \"a title\",\r\n    \"description\": \"a description for the achievement\",\r\n    \"hash\": \"8a715f61518b730f2c57b26ba543a5e0\",\r\n    \"picture\": \"picture.jpg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://64903.cvoatweb.be/api/achievement",
+					"protocol": "https",
+					"host": [
+						"64903",
+						"cvoatweb",
+						"be"
+					],
+					"path": [
+						"api",
+						"achievement"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "score",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"link\": \"games/pokeman/index.html\",\r\n    \"userid\": 1,\r\n    \"hash\": \"8a715f61518b730f2c57b26ba543a5e0\",\r\n    \"points\": 2,\r\n    \"time\": \"1:30 min\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://64903.cvoatweb.be/api/score",
+					"protocol": "https",
+					"host": [
+						"64903",
+						"cvoatweb",
+						"be"
+					],
+					"path": [
+						"api",
+						"score"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

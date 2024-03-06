@@ -91,12 +91,13 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
         if(isValueAMon === undefined) {
             return;
         }
-        let guessedAlready = guessedPokemon.find((pokemon) => pokemon === e.target.value);
+        let guessedAlready = guessedPokemon.find((pokemon) => pokemon === e.target.value.toLowerCase());
         if(guessedAlready !== undefined) {
             return;
         }
         currentscore += 1;
-        if(INPUT.value === 'pikachu') {
+        guessedPokemon.push(isValueAMon);
+        if(guessedPokemon.includes('pikachu')) {
             const response = await fetch('https://64903.cvoatweb.be/api/achievement', {
                 method: 'POST',
                 headers: {
@@ -110,7 +111,7 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
                     picture: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png'})
             });
         }
-        if(INPUT.value === 'charizard') {
+        if(guessedPokemon.includes('charizard')) {
             const response = await fetch('https://64903.cvoatweb.be/api/achievement', {
                 method: 'POST',
                 headers: {
@@ -139,7 +140,6 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
                     picture: 'https://en.pokemart.be/wp-content/uploads/2022/06/pokedex.png'})
             });
         }
-        guessedPokemon.push(isValueAMon);
         INPUT.value = '';
         const td = document.createElement('td');
         td.innerText = isValueAMon;
