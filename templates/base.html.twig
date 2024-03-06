@@ -16,8 +16,8 @@
             <a href = {{ path('app_login') }}>Log in</a>
             <a href = {{ path('app_register') }}>Register</a>
             <a href = {{ path('app_dashboard') }}>homepage</a>
+            <a href ="/postman/game.postman_collection.json" download>postman</a>
             {% if app.user %}
-                <a href = '/postman/game.postman_collection.json' download>postman</a>
                 <a href="/user/{{ app.user.id }}/edit">edit profile</a>
             <a href = {{ path('app_game_new') }}>upload a game</a>
                 <div class="mb-3">
