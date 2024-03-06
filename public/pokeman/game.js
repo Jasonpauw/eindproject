@@ -63,7 +63,7 @@ async function postScore(){
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({link: "pokeman",
+        body: JSON.stringify({link: "/games/pokeman/index.html",
             userid: userid,
             hash: hash,
             points: currentscore,
@@ -98,13 +98,13 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
         guessedPokemon.push(isValueAMon);
         INPUT.value = '';
         currentscore += 1;
-        if(guessedPokemon.includes('pikachu')) {
+        if(guessedPokemon.includes('pikachu') && guessedAlready !== undefined) {
             const response = await fetch('https://64903.cvoatweb.be/api/achievement', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({link: "pokeman",
+                body: JSON.stringify({link: "/games/pokeman/index.html",
                     userid: userid,
                     hash: hash,
                     title: 'mascot!!',
@@ -112,13 +112,13 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
                     picture: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png'})
             });
         }
-        if(guessedPokemon.includes('charizard')) {
+        if(guessedPokemon.includes('charizard') && guessedAlready !== undefined) {
             const response = await fetch('https://64903.cvoatweb.be/api/achievement', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({link: "pokeman",
+                body: JSON.stringify({link: "/games/pokeman/index.html",
                     userid: userid,
                     hash: hash,
                     title: 'best pokemon',
@@ -133,7 +133,7 @@ SCORE.innerText = 'score = ' + currentscore + '/' + TOTAL;
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({link: "pokeman",
+                body: JSON.stringify({link: "/games/pokeman/index.html",
                     userid: userid,
                     hash: hash,
                     title: 'max points',
